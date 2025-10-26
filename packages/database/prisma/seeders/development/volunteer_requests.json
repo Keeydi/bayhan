@@ -1,0 +1,19 @@
+{
+  "model": "VolunteerRequest",
+  "options": {
+    "clear": true,
+    "order": 5,
+    "dependencies": [
+      "User"
+    ]
+  },
+  "data": [
+    {
+      "id": "request-1",
+      "userId": "volunteer-user-id",
+      "status": "APPROVED",
+      "reason": "Experienced in disaster response and first aid. Ready to help in emergency situations.",
+      "updatedBy": "admin-user-id"
+    }
+  ]
+}

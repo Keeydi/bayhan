@@ -1,0 +1,247 @@
+model Profile {
+  userId        String         @unique
+  firstName     String         @map("first_name")
+  lastName      String         @map("last_name")
+  phone         String?
+  birthDate     DateTime?      @map("birth_date")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  volunteerType VolunteerType? @map("volunteer_type")
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+  @@schema("public")
+}
+
+model Address {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  street    String?
+  city      String
+  state     String
+  zipCode   String   @map("zip_code")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  barangay  String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
+  @@schema("public")
+}
+
+model Media {
+  id                   String                @id @default(cuid())
+  url                  String
+  type                 MediaType
+  mimeType             String                @map("mime_type")
+  uploadedById         String                @map("uploaded_by")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+  incidentMedia        IncidentMedia?
+  uploadedBy           User                  @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  trainingProgramMedia TrainingProgramMedia?
+
+  @@map("medias")
+  @@schema("public")
+}
+
+model VolunteerRequest {
+  id        String                 @id @default(cuid())
+  userId    String                 @map("user_id")
+  status    VolunteerRequestStatus @default(PENDING)
+  reason    String?
+  createdAt DateTime               @default(now()) @map("created_at")
+  updatedAt DateTime               @updatedAt @map("updated_at")
+  updatedBy String?                @map("updated_by")
+  updater   User?                  @relation("VolunteerRequestUpdater", fields: [updatedBy], references: [id], onDelete: Cascade)
+  user      User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("volunteer_requests")
+  @@schema("public")
+}
+
+model Attendance {
+  id           String    @id @default(cuid())
+  userId       String    @map("user_id")
+  date         DateTime  @map("date")
+  checkInTime  DateTime  @default(now()) @map("check_in_time")
+  checkOutTime DateTime? @map("check_out_time")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("attendance_records")
+  @@schema("public")
+}
+
+model LocationLog {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  latitude  Float
+  longitude Float
+  timestamp DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("location_logs")
+  @@schema("public")
+}
+
+model Certification {
+  id          String   @id @default(cuid())
+  userId      String?  @map("user_id")
+  name        String
+  imageUrl    String   @map("image_url")
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("certifications")
+  @@schema("public")
+}
+
+model Incident {
+  id          String               @id @default(cuid())
+  title       String
+  description String?
+  location    Json
+  status      IncidentStatus       @default(OPEN)
+  severity    IncidentSeverity     @default(LOW)
+  reportedBy  String               @map("user_id")
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+  deployments IncidentDeployment[]
+  medias      IncidentMedia[]
+  reporter    User                 @relation(fields: [reportedBy], references: [id], onDelete: Cascade)
+
+  @@map("incidents")
+  @@schema("public")
+}
+
+model IncidentMedia {
+  id         String   @id @default(cuid())
+  incidentId String   @map("incident_id")
+  mediaId    String   @unique @map("media_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  media      Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([incidentId, mediaId])
+  @@map("incident_medias")
+  @@schema("public")
+}
+
+model IncidentDeployment {
+  incidentId String   @map("incident_id")
+  userId     String   @map("user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([incidentId, userId])
+  @@map("incident_deployments")
+  @@schema("public")
+}
+
+model TrainingProgram {
+  id                    String                      @id @default(cuid())
+  title                 String
+  description           String?
+  date                  DateTime
+  startDate             DateTime?                   @map("start_date")
+  endDate               DateTime?                   @map("end_date")
+  location              Json
+  facilitator           String?
+  status                TrainingProgramStatus       @default(UPCOMING)
+  maxParticipants       Int?                        @map("max_participants")
+  requiredVolunteerType VolunteerType?              @map("required_volunteer_type")
+  createdAt             DateTime                    @default(now()) @map("created_at")
+  updatedAt             DateTime                    @updatedAt @map("updated_at")
+  medias                TrainingProgramMedia[]
+  participants          TrainingProgramParticipant[]
+
+  @@map("training_programs")
+  @@schema("public")
+}
+
+model TrainingProgramMedia {
+  id                String          @id @default(cuid())
+  trainingProgramId String          @map("training_program_id")
+  mediaId           String          @unique @map("media_id")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  media             Media           @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  trainingProgram   TrainingProgram @relation(fields: [trainingProgramId], references: [id], onDelete: Cascade)
+
+  @@unique([trainingProgramId, mediaId])
+  @@map("training_program_medias")
+  @@schema("public")
+}
+
+model TrainingProgramParticipant {
+  id                String          @id @default(cuid())
+  userId            String          @map("user_id")
+  trainingProgramId String          @map("training_program_id")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  trainingProgram   TrainingProgram @relation(fields: [trainingProgramId], references: [id], onDelete: Cascade)
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, trainingProgramId])
+  @@map("training_program_participants")
+  @@schema("public")
+}
+
+enum IncidentStatus {
+  OPEN
+  RESOLVED
+
+  @@schema("public")
+}
+
+enum IncidentSeverity {
+  LOW
+  MODERATE
+  HIGH
+  CRITICAL
+
+  @@schema("public")
+}
+
+enum VolunteerRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@schema("public")
+}
+
+enum TrainingProgramStatus {
+  UPCOMING
+  ONGOING
+  FINISHED
+  CANCELLED
+
+  @@schema("public")
+}
+
+enum MediaType {
+  ACCREDITATION
+  CERTIFICATION
+  INCIDENT
+  TRAINING
+
+  @@schema("public")
+}
+
+enum VolunteerType {
+  TYPE_1_SEARCH_RESCUE
+  TYPE_2_EVACUATION_MOBILITY
+  TYPE_3_WASAR
+  TYPE_4_NOT_CERTIFIED
+
+  @@schema("public")
+}

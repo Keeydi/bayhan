@@ -1,0 +1,33 @@
+{
+  "model": "Certification",
+  "options": {
+    "clear": true,
+    "order": 6,
+    "dependencies": [
+      "User"
+    ]
+  },
+  "data": [
+    {
+      "id": "cert-1",
+      "userId": "volunteer-user-id",
+      "name": "Basic First Aid Certification",
+      "imageUrl": "https://example.com/certificates/first-aid-cert.jpg",
+      "description": "Certified in basic first aid and CPR by the Philippine Red Cross"
+    },
+    {
+      "id": "cert-2",
+      "userId": "volunteer-user-id",
+      "name": "Emergency Response Training",
+      "imageUrl": "https://example.com/certificates/emergency-response-cert.jpg",
+      "description": "Completed emergency response training program"
+    },
+    {
+      "id": "cert-3",
+      "userId": "cdrrmo-user-id",
+      "name": "Disaster Management Certification",
+      "imageUrl": "https://example.com/certificates/disaster-mgmt-cert.jpg",
+      "description": "Advanced certification in disaster management and coordination"
+    }
+  ]
+}

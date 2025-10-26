@@ -1,0 +1,34 @@
+{
+  "model": "Address",
+  "options": {
+    "clear": true,
+    "order": 2,
+    "upsertKey": "userId",
+    "dependencies": [
+      "User"
+    ]
+  },
+  "data": [
+    {
+      "userId": "admin-user-id",
+      "street": "123 Admin Street",
+      "city": "Manila",
+      "state": "Metro Manila",
+      "zipCode": "1000"
+    },
+    {
+      "userId": "cdrrmo-user-id",
+      "street": "456 CDRRMO Avenue",
+      "city": "Quezon City",
+      "state": "Metro Manila",
+      "zipCode": "1100"
+    },
+    {
+      "userId": "volunteer-user-id",
+      "street": "789 Volunteer Road",
+      "city": "Makati",
+      "state": "Metro Manila",
+      "zipCode": "1200"
+    }
+  ]
+}

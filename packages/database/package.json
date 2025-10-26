@@ -1,0 +1,33 @@
+{
+  "name": "@repo/database",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc && tsc-alias --resolve-full-paths",
+    "dev": "concurrently \"prisma generate --watch\" \"tsc --watch\" \"nodemon --watch dist --ext js --exec 'tsc-alias --resolve-full-paths'\"",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev --skip-generate",
+    "db:deploy": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^6.15.0",
+    "@prisma/client": "^6.15.0",
+    "@prisma/config": "^6.15.0",
+    "prisma-extension-pagination": "^0.7.5"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.15.0",
+    "tsc-alias": "^1.8.16"
+  }
+}

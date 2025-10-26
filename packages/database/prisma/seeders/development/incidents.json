@@ -1,0 +1,51 @@
+{
+  "model": "Incident",
+  "options": {
+    "clear": true,
+    "order": 3,
+    "dependencies": [
+      "User"
+    ]
+  },
+  "data": [
+    {
+      "id": "incident-1",
+      "title": "Flooding in Barangay San Antonio",
+      "description": "Heavy rainfall has caused flooding in several areas of Barangay San Antonio. Water level is rising and residents need immediate assistance.",
+      "location": {
+        "lat": 14.5995,
+        "lng": 120.9842,
+        "address": "Barangay San Antonio, Quezon City"
+      },
+      "status": "OPEN",
+      "severity": "HIGH",
+      "reportedBy": "volunteer-user-id"
+    },
+    {
+      "id": "incident-2",
+      "title": "Fire in Residential Area",
+      "description": "Fire reported in a residential building. Fire department is responding but additional support may be needed.",
+      "location": {
+        "lat": 14.6042,
+        "lng": 120.9822,
+        "address": "Residential Area, Makati"
+      },
+      "status": "OPEN",
+      "severity": "CRITICAL",
+      "reportedBy": "cdrrmo-user-id"
+    },
+    {
+      "id": "incident-3",
+      "title": "Power Outage in Downtown Area",
+      "description": "Widespread power outage affecting downtown area. Estimated restoration time is 2-3 hours.",
+      "location": {
+        "lat": 14.5995,
+        "lng": 120.9842,
+        "address": "Downtown Manila"
+      },
+      "status": "RESOLVED",
+      "severity": "MODERATE",
+      "reportedBy": "admin-user-id"
+    }
+  ]
+}

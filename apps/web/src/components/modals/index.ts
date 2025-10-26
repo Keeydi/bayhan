@@ -1,0 +1,1 @@
+export { IncidentModal } from './incident';

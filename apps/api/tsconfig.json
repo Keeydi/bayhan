@@ -1,0 +1,47 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "esnext",
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": [
+        "src/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@middlewares/*": [
+        "src/middlewares/*"
+      ],
+      "@middlewares": [
+        "src/middlewares/index.ts"
+      ],
+      "@schemas/*": [
+        "src/schemas/*"
+      ],
+      "@controllers/*": [
+        "src/controllers/*"
+      ],
+      "@lib/*": [
+        "src/lib/*"
+      ],
+    },
+    "moduleResolution": "bundler",
+    "rootDir": "src",
+    "outDir": "dist",
+    "importsNotUsedAsValues": "remove",
+    "strict": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

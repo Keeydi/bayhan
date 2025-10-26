@@ -1,0 +1,34 @@
+{
+  "model": "Account",
+  "options": {
+    "clear": true,
+    "order": 1,
+    "upsertKey": "id",
+    "dependencies": [
+      "User"
+    ]
+  },
+  "data": [
+    {
+      "id": "account-admin-1",
+      "accountId": "admin@test.com",
+      "providerId": "credential",
+      "userId": "admin-user-id",
+      "password": "930d1ccf6a936f4ea4f06a0097cfb024:5e66e2f03ddb00930af4d05fb0f13ccfa216550f613ae9c544e1ced66742780378ef38ff14fc059604efa2d656d4138b16a423215254c9760ca949d80c8373e0"
+    },
+    {
+      "id": "account-cdrrmo-1",
+      "accountId": "cdrrmo@test.com",
+      "providerId": "credential",
+      "userId": "cdrrmo-user-id",
+      "password": "930d1ccf6a936f4ea4f06a0097cfb024:5e66e2f03ddb00930af4d05fb0f13ccfa216550f613ae9c544e1ced66742780378ef38ff14fc059604efa2d656d4138b16a423215254c9760ca949d80c8373e0"
+    },
+    {
+      "id": "account-volunteer-1",
+      "accountId": "volunteer@test.com",
+      "providerId": "credential",
+      "userId": "volunteer-user-id",
+      "password": "930d1ccf6a936f4ea4f06a0097cfb024:5e66e2f03ddb00930af4d05fb0f13ccfa216550f613ae9c544e1ced66742780378ef38ff14fc059604efa2d656d4138b16a423215254c9760ca949d80c8373e0"
+    }
+  ]
+}

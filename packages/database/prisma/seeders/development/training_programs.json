@@ -1,0 +1,48 @@
+{
+  "model": "TrainingProgram",
+  "options": {
+    "clear": true,
+    "order": 4
+  },
+  "data": [
+    {
+      "id": "training-1",
+      "title": "Basic First Aid Training",
+      "description": "Comprehensive first aid training covering basic life support, wound care, and emergency response procedures.",
+      "date": "2024-02-15T09:00:00.000Z",
+      "location": {
+        "lat": 14.6042,
+        "lng": 120.9822,
+        "address": "123 Training Street, Quezon City"
+      },
+      "facilitator": "Dr. Maria Santos",
+      "status": "UPCOMING"
+    },
+    {
+      "id": "training-2",
+      "title": "Disaster Response Coordination",
+      "description": "Training on disaster response coordination, communication protocols, and resource management during emergencies.",
+      "date": "2024-01-20T08:00:00.000Z",
+      "location": {
+        "lat": 14.5995,
+        "lng": 120.9842,
+        "address": "456 Emergency Avenue, Manila"
+      },
+      "facilitator": "Capt. Juan Dela Cruz",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "training-3",
+      "title": "Search and Rescue Operations",
+      "description": "Advanced training on search and rescue techniques, equipment usage, and safety protocols.",
+      "date": "2024-03-10T10:00:00.000Z",
+      "location": {
+        "lat": 14.6042,
+        "lng": 120.9822,
+        "address": "789 Rescue Road, Makati"
+      },
+      "facilitator": "Lt. Ana Rodriguez",
+      "status": "UPCOMING"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "model": "User",
+  "options": {
+    "clear": true,
+    "order": 0,
+    "upsertKey": "email"
+  },
+  "data": [
+    {
+      "id": "admin-user-id",
+      "name": "Admin User",
+      "email": "admin@test.com",
+      "emailVerified": true,
+      "role": "admin",
+      "banned": false
+    },
+    {
+      "id": "cdrrmo-user-id",
+      "name": "CDRRMO User",
+      "email": "cdrrmo@test.com",
+      "emailVerified": true,
+      "role": "cdrrmo",
+      "banned": false
+    },
+    {
+      "id": "volunteer-user-id",
+      "name": "Volunteer User",
+      "email": "volunteer@test.com",
+      "emailVerified": true,
+      "role": "volunteer",
+      "banned": false
+    }
+  ]
+}
