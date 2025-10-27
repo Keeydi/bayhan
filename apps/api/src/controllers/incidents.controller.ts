@@ -3,7 +3,7 @@ import {
     CommonParametersSchema,
     CreateIncidentSchema,
     DeployVolunteersSchema,
-    PaginatedQuerySchema
+    IncidentQuerySchema
 } from '@repo/schemas'
 import { IncidentStatus, MediaType, VolunteerRequestStatus } from '@repo/database'
 import { prisma } from '@utils/database'
@@ -13,15 +13,18 @@ import { StatusCodes } from 'http-status-codes'
 import { geolocationService, type Location, smsService } from '@lib/external'
 import { DateTime } from 'luxon'
 
-export const getIncidents: RequestHandler = validateRequestQuery(PaginatedQuerySchema, async (req, res) => {
+export const getIncidents: RequestHandler = validateRequestQuery(IncidentQuerySchema, async (req, res) => {
     const { parsedQuery } = req
+    const { type, ...pagination } = parsedQuery
 
     const [ incidents, meta ] = await prisma.incident
         .paginate({
+            where: type ? { type } : undefined,
             select: {
                 id: true,
                 title: true,
                 description: true,
+                type: true,
                 severity: true,
                 status: true,
                 reportedBy: true,
@@ -43,7 +46,7 @@ export const getIncidents: RequestHandler = validateRequestQuery(PaginatedQueryS
             }
         })
         .withPages({
-            ...parsedQuery,
+            ...pagination,
             includePageCount: true
         })
 
@@ -105,6 +108,7 @@ export const getIncidentById: RequestHandler = validateRequestParams(CommonParam
             title: incident.title,
             description: incident.description,
             location: incident.location,
+            type: incident.type,
             status: incident.status,
             severity: incident.severity,
             reportedBy: incident.reportedBy,
@@ -220,7 +224,7 @@ export const resolveIncident: RequestHandler = validateRequestParams(CommonParam
 function getProximityForSeverity(severity: string): number | null {
     switch (severity) {
         case 'LOW': return 3
-        case 'MODERATE': return 5
+        case 'MED': return 5
         case 'HIGH': return 10
         case 'CRITICAL': return null // null means all volunteers in Tarlac City
         default: return 5
@@ -604,7 +608,7 @@ export const deployVolunteers: RequestHandler = validateRequest({
                     volunteers: deployedVolunteers.map(v => ({
                         id: v.id,
                         name: v.name,
-                        distance: Math.round(v.distance * 100) / 100,
+                        distance: v.distance ? Math.round(v.distance * 100) / 100 : null,
                         estimatedDuration: v.estimatedDuration ? Math.round(v.estimatedDuration / 60) : null
                     }))
                 },
@@ -613,7 +617,7 @@ export const deployVolunteers: RequestHandler = validateRequest({
                     volunteers: inactiveVolunteers.map(v => ({
                         id: v.id,
                         name: v.name,
-                        distance: Math.round(v.distance * 100) / 100,
+                        distance: v.distance ? Math.round(v.distance * 100) / 100 : null,
                         estimatedDuration: v.estimatedDuration ? Math.round(v.estimatedDuration / 60) : null
                     }))
                 },

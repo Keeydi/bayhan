@@ -106,6 +106,7 @@ model Incident {
   title       String
   description String?
   location    Json
+  type        IncidentType?        @default(OTHER)
   status      IncidentStatus       @default(OPEN)
   severity    IncidentSeverity     @default(LOW)
   reportedBy  String               @map("user_id")
@@ -204,7 +205,7 @@ enum IncidentStatus {
 
 enum IncidentSeverity {
   LOW
-  MODERATE
+  MED
   HIGH
   CRITICAL
 
@@ -242,6 +243,15 @@ enum VolunteerType {
   TYPE_2_EVACUATION_MOBILITY
   TYPE_3_WASAR
   TYPE_4_NOT_CERTIFIED
+
+  @@schema("public")
+}
+
+enum IncidentType {
+  FLOODING
+  LAHAR_FLOW
+  EARTHQUAKE
+  OTHER
 
   @@schema("public")
 }

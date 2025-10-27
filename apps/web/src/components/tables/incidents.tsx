@@ -13,6 +13,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import { Card } from '@components/ui/card'
 import { InfiniteScroll } from '@components/infinite-scroll'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@components/ui/dropdown-menu'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@components/ui/select'
 import { Incident, IncidentSeverity, IncidentStatus } from '@lib/types'
 import { PermissionGuard } from '@components/auth'
 import { useApi } from '@hooks/use-api'
@@ -29,26 +30,31 @@ function statusBadge(status: IncidentStatus) {
 function severityBadge(severity: IncidentSeverity) {
     const map = {
         LOW: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
-        MODERATE: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+        MED: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
         HIGH: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
         CRITICAL: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
     } as const
     return <Badge variant='secondary' className={ map[severity] }>{ severity }</Badge>
 }
 
-async function fetchIncidents({ pageParam = 1, api }: {
+async function fetchIncidents({ pageParam = 1, filterType, api }: {
     pageParam?: number;
+    filterType?: string;
     api: ReturnType<typeof useApi>
 }): Promise<{
     incidents: Incident[];
     nextCursor: number | null
 }> {
-    const response = await api.get('/incidents', {
-        params: {
-            page: pageParam,
-            limit: 20
-        }
-    })
+    const params: any = {
+        page: pageParam,
+        limit: 20
+    }
+    
+    if (filterType && filterType !== 'ALL') {
+        params.type = filterType
+    }
+
+    const response = await api.get('/incidents', { params })
 
     if (!response.data?.success) {
         throw new Error(response.data?.message || 'Failed to fetch incidents')
@@ -198,6 +204,108 @@ export function IncidentsTable() {
         retry: 2,
         retryDelay: 1000,
         enabled: isAuthenticated && !authLoading // Only run query when authenticated
+    })
+
+    const incidents = useMemo(() => data?.pages.flatMap(page => page.incidents) ?? [], [ data ])
+
+    return (
+        <Card className='p-0 border-none overflow-hidden'>
+            <Table>
+                <TableHeader className='sticky top-0 bg-card z-10'>
+                    <TableRow>
+                        <TableHead className='py-3 px-4'>Incident</TableHead>
+                        <TableHead className='hidden md:table-cell py-3 px-4'>Severity</TableHead>
+                        <TableHead className='hidden md:table-cell py-3 px-4'>Status</TableHead>
+                        <TableHead className='hidden md:table-cell py-3 px-4'>Reported By</TableHead>
+                        <TableHead className='hidden md:table-cell py-3 px-4'>Date</TableHead>
+                        <TableHead className='text-right py-3 px-4'>Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <InfiniteScroll
+                    as={ TableBody }
+                    triggerAs={ TableRow }
+                    fetchNextPage={ fetchNextPage }
+                    hasNextPage={ hasNextPage }
+                    loadingComponent={ <RowLoading /> }
+                >
+                    { isLoading && (
+                        <>
+                            <TableRow>
+                                <RowLoading />
+                            </TableRow>
+                            <TableRow>
+                                <RowLoading />
+                            </TableRow>
+                            <TableRow>
+                                <RowLoading />
+                            </TableRow>
+                        </>
+                    ) }
+
+                    { isError && (
+                        <TableRow>
+                            <TableCell colSpan={ 6 } className='py-8 px-4 text-center'>
+                                <div className='flex flex-col items-center gap-2'>
+                                    <span className='text-sm text-destructive'>Failed to load incidents</span>
+                                    <span className='text-xs text-muted-foreground'>
+                                        { error instanceof Error ? error.message : 'An unexpected error occurred' }
+                                    </span>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ) }
+
+                    { !isLoading && !isError && incidents.length === 0 && (
+                        <TableRow>
+                            <TableCell colSpan={ 6 } className='py-8 px-4 text-center'>
+                                <span className='text-sm text-muted-foreground'>No incidents found.</span>
+                            </TableCell>
+                        </TableRow>
+                    ) }
+
+                    { incidents.map(incident => <Row key={ incident.id } incident={ incident } />) }
+                </InfiniteScroll>
+            </Table>
+        </Card>
+    )
+}
+
+export function IncidentsTableWithFilter() {
+    const [ filterType, setFilterType ] = React.useState<'ALL' | 'FLOODING' | 'LAHAR_FLOW' | 'EARTHQUAKE' | 'OTHER'>('ALL')
+
+    return (
+        <>
+            <div className='flex items-center gap-4 mb-6 justify-end'>
+                <Select value={ filterType } onValueChange={ (value: any) => setFilterType(value) }>
+                    <SelectTrigger className='w-[200px]'>
+                        <SelectValue placeholder='Filter by incident type' />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value='ALL'>All Incidents</SelectItem>
+                        <SelectItem value='FLOODING'>Flooding</SelectItem>
+                        <SelectItem value='LAHAR_FLOW'>Lahar Flow</SelectItem>
+                        <SelectItem value='EARTHQUAKE'>Earthquake</SelectItem>
+                        <SelectItem value='OTHER'>Other</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+            <IncidentsTableWithFilterContent filterType={ filterType } />
+        </>
+    )
+}
+
+function IncidentsTableWithFilterContent({ filterType }: { filterType: string }) {
+    const api = useApi()
+    const { isAuthenticated, isLoading: authLoading } = useAuth()
+
+    const { data, fetchNextPage, hasNextPage, isLoading, isError, error } = useInfiniteQuery({
+        queryKey: [ 'incidents', filterType ],
+        queryFn: ({ pageParam }) => fetchIncidents({ pageParam, filterType, api }),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        retry: 2,
+        retryDelay: 1000,
+        enabled: isAuthenticated && !authLoading
     })
 
     const incidents = useMemo(() => data?.pages.flatMap(page => page.incidents) ?? [], [ data ])

@@ -1,12 +1,17 @@
 import { z } from 'zod'
-import { LocationSchema } from './common'
+import { LocationSchema, PaginatedQuerySchema } from './common'
 
 export const CreateIncidentSchema = z.object({
     title: z.string().min(1, 'Title is required'),
     description: z.string().min(1, 'Description is required').optional(),
     location: LocationSchema,
-    severity: z.enum([ 'LOW', 'MODERATE', 'HIGH', 'CRITICAL' ]).default('MODERATE'),
+    type: z.enum([ 'FLOODING', 'LAHAR_FLOW', 'EARTHQUAKE', 'OTHER' ]).optional(),
+    severity: z.enum([ 'LOW', 'MED', 'HIGH', 'CRITICAL' ]).default('MED'),
     status: z.enum([ 'OPEN', 'RESOLVED' ]).default('OPEN')
+})
+
+export const IncidentQuerySchema = PaginatedQuerySchema.extend({
+    type: z.enum([ 'FLOODING', 'LAHAR_FLOW', 'EARTHQUAKE', 'OTHER' ]).optional()
 })
 
 export const DeployVolunteersSchema = z.object({
@@ -15,3 +20,4 @@ export const DeployVolunteersSchema = z.object({
 
 export type CreateIncident = z.infer<typeof CreateIncidentSchema>
 export type DeployVolunteers = z.infer<typeof DeployVolunteersSchema>
+export type IncidentQuery = z.infer<typeof IncidentQuerySchema>

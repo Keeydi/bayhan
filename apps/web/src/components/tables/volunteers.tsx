@@ -45,6 +45,19 @@ const Row = ({ user }: { user: User }) => {
     const firstName = user.profile?.firstName || user.name?.split(' ')[0] || 'Unknown'
     const lastName = user.profile?.lastName || user.name?.split(' ').slice(1).join(' ') || 'User'
 
+    // Get volunteer type from profile
+    const volunteerType = (user.profile as any)?.volunteerType || 'N/A'
+    // Format volunteer type (remove TYPE_ prefix and underscores)
+    const formattedVolunteerType = typeof volunteerType === 'string' 
+        ? volunteerType.replace(/TYPE_\d+_/g, '').replace(/_/g, ' ')
+        : 'N/A'
+
+    // Get address from address relation
+    const address = (user as any)?.address
+    const formattedAddress = address 
+        ? `${address.street || ''} ${address.barangay || ''} ${address.city || ''} ${address.state || ''}`.trim() || 'N/A'
+        : 'N/A'
+
     return (
         <TableRow className='hover:bg-muted/50'>
             <TableCell className='py-3 px-4'>
@@ -59,6 +72,18 @@ const Row = ({ user }: { user: User }) => {
                         <span className='text-xs text-muted-foreground'>{ user.email }</span>
                     </div>
                 </div>
+            </TableCell>
+
+            <TableCell className='hidden lg:table-cell py-3 px-4'>
+                <span className='text-sm text-muted-foreground'>
+                    { formattedVolunteerType }
+                </span>
+            </TableCell>
+
+            <TableCell className='hidden lg:table-cell py-3 px-4'>
+                <span className='text-sm text-muted-foreground max-w-xs truncate'>
+                    { formattedAddress }
+                </span>
             </TableCell>
 
             <TableCell className='hidden md:table-cell py-3 px-4'>
@@ -130,6 +155,14 @@ const RowLoading = () => {
                         <Skeleton className='h-3 w-48 rounded' />
                     </div>
                 </div>
+            </TableCell>
+
+            <TableCell className='hidden lg:table-cell py-3 px-4'>
+                <Skeleton className='h-4 w-32 rounded' />
+            </TableCell>
+
+            <TableCell className='hidden lg:table-cell py-3 px-4'>
+                <Skeleton className='h-4 w-48 rounded' />
             </TableCell>
 
             <TableCell className='hidden md:table-cell py-3 px-4'>
@@ -208,6 +241,8 @@ export default function VolunteersTable() {
                 <TableHeader className='sticky top-0 bg-card z-10'>
                     <TableRow>
                         <TableHead className='py-3 px-4'>Volunteer</TableHead>
+                        <TableHead className='hidden lg:table-cell py-3 px-4'>Volunteer Type</TableHead>
+                        <TableHead className='hidden lg:table-cell py-3 px-4'>Address</TableHead>
                         <TableHead className='hidden md:table-cell py-3 px-4'>Joined Date</TableHead>
                         <TableHead className='hidden md:table-cell py-3 px-4'>Last Updated</TableHead>
                         <TableHead className='text-right py-3 px-4'>Actions</TableHead>
@@ -222,7 +257,7 @@ export default function VolunteersTable() {
                 >
                     { isError && (
                         <TableRow>
-                            <TableCell colSpan={ 4 } className='py-3 px-4 text-center'>
+                            <TableCell colSpan={ 6 } className='py-3 px-4 text-center'>
                                 <div className='flex flex-col items-center gap-2'>
                                     <span className='text-sm text-destructive'>Failed to load volunteers</span>
                                     <span className='text-xs text-muted-foreground'>
@@ -235,7 +270,7 @@ export default function VolunteersTable() {
 
                     { !isLoading && !isError && volunteers.length === 0 && (
                         <TableRow>
-                            <TableCell colSpan={ 4 } className='py-3 px-4 text-center'>
+                            <TableCell colSpan={ 6 } className='py-3 px-4 text-center'>
                                 <span className='text-sm text-muted-foreground'>No volunteers found.</span>
                             </TableCell>
                         </TableRow>

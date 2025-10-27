@@ -269,18 +269,37 @@ export const joinTrainingProgram: RequestHandler = validateRequestParams(CommonP
         }
     })
 
+    console.log('Training capacity check:', {
+        maxParticipants: updatedTraining?.maxParticipants,
+        currentParticipants: updatedTraining?.participants.length,
+        trainingTitle: training.title
+    })
+
     if (updatedTraining && updatedTraining.maxParticipants && 
         updatedTraining.participants.length >= updatedTraining.maxParticipants) {
         // Notify all participants that the program is full
         const { smsService } = await import('@src/lib/external')
-        const messages = updatedTraining.participants.map(participant => ({
-            to: participant.user.profile?.phone,
-            body: `The training program "${training.title}" has reached its maximum capacity of ${training.maxParticipants} participants. You are confirmed as a participant.`
-        })).filter(msg => msg.to)
+        const messages = updatedTraining.participants
+            .map(participant => ({
+                to: participant.user.profile?.phone,
+                body: `The training program "${training.title}" has reached its maximum capacity of ${training.maxParticipants} participants. You are confirmed as a participant.`
+            }))
+            .filter((msg): msg is { to: string; body: string } => !!msg.to)
+
+        console.log('SMS notifications to send:', {
+            totalParticipants: updatedTraining.participants.length,
+            messagesWithPhone: messages.length,
+            participantPhones: messages.map(m => m.to)
+        })
 
         if (messages.length > 0) {
-            await smsService.sendBulkSMS(messages)
+            const result = await smsService.sendBulkSMS(messages)
+            console.log('SMS sending result:', result)
+        } else {
+            console.warn('No SMS sent: participants do not have phone numbers')
         }
+    } else {
+        console.log('Training not at capacity yet or maxParticipants not set')
     }
 
     res.respond(Response.success({ message: 'Successfully joined the training program' }))

@@ -9,6 +9,7 @@ import { format } from 'date-fns'
 import { BackButton } from '@components/ui/back-button'
 import { IncidentActions } from '@components/features/incident'
 import { Incident, IncidentSeverity, IncidentStatus, Media } from '@repo/database'
+import { IncidentType } from '@lib/types'
 import { createApiClient } from '@lib/api'
 import { getSession, hasPermission } from '@actions/auth'
 import { forbidden, notFound } from 'next/navigation'
@@ -21,6 +22,7 @@ interface IncidentDetail {
     title: string
     description?: string
     location: { lat: number; lng: number; address?: string }
+    type?: IncidentType
     status: IncidentStatus
     severity: IncidentSeverity
     reportedBy: string
@@ -47,7 +49,7 @@ const statusColors: Record<IncidentStatus, string> = {
 
 const severityColors: Record<IncidentSeverity, string> = {
     LOW: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
-    MODERATE: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+    MED: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
     HIGH: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
     CRITICAL: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
 }
@@ -70,6 +72,7 @@ async function fetchIncident(id: string): Promise<IncidentDetail | null> {
         title: incident.title,
         description: incident.description,
         location: incident.location,
+        type: incident.type,
         status: incident.status,
         severity: incident.severity,
         reportedBy: incident.reportedBy,

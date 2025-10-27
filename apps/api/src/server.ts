@@ -33,8 +33,14 @@ export const createServer = async () => {
     app.use(middlewares.requestLogger)
 
     app.use(cookieParser());
+    
+    // In development, allow multiple localhost origins
+    const allowedOrigins = env.NODE_ENV === 'development' 
+        ? /^http:\/\/localhost:\d+$/
+        : env.FRONTEND_URL;
+    
     app.use(cors({
-        origin: env.FRONTEND_URL,
+        origin: allowedOrigins,
         methods: [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS' ],
         credentials: true
     }))

@@ -18,7 +18,17 @@ export const getVolunteers: RequestHandler = validateRequestQuery(PaginatedQuery
                     select: {
                         firstName: true,
                         lastName: true,
-                        phone: true
+                        phone: true,
+                        volunteerType: true
+                    }
+                },
+                address: {
+                    select: {
+                        street: true,
+                        city: true,
+                        state: true,
+                        barangay: true,
+                        zipCode: true
                     }
                 }
             }

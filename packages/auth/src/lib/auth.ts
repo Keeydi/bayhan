@@ -34,7 +34,7 @@ const admin = ac.newRole({
 const cdrrmo = ac.newRole({
     dashboard: [ 'read' ],
     attendance: [ 'write', 'read' ],
-    incident: [ 'write', 'read', 'update' ],
+    incident: [ 'write', 'read', 'update', 'deploy' ],
     location: [ 'read' ],
     user: [ 'write', 'read', 'update' ],
     profile: [ 'write', 'read', 'update' ],

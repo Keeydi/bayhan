@@ -44,7 +44,7 @@
         "address": "Downtown Manila"
       },
       "status": "RESOLVED",
-      "severity": "MODERATE",
+      "severity": "MED",
       "reportedBy": "admin-user-id"
     }
   ]

@@ -36,7 +36,7 @@ export const ReportIncidentForm: React.FC<ReportIncidentFormProps> = ({ onSubmit
                 lat: 14.5995,
                 lng: 120.9842
             },
-            severity: 'MODERATE' as const,
+            severity: 'MED' as const,
             status: 'OPEN' as const
         }
     })
@@ -135,7 +135,7 @@ export const ReportIncidentForm: React.FC<ReportIncidentFormProps> = ({ onSubmit
                                                 </FormControl>
                                                 <SelectContent>
                                                     <SelectItem value='LOW'>Low</SelectItem>
-                                                    <SelectItem value='MODERATE'>Moderate</SelectItem>
+                                                    <SelectItem value='MED'>Med</SelectItem>
                                                     <SelectItem value='HIGH'>High</SelectItem>
                                                     <SelectItem value='CRITICAL'>Critical</SelectItem>
                                                 </SelectContent>

@@ -307,7 +307,7 @@ export function Onboarding({ className, ...props }: React.ComponentProps<'div'>)
                                             control={ form.control }
                                             name='firstName'
                                             render={ ({ field }) => (
-                                                <FormItem className='grid gap-3'>
+                                                <FormItem>
                                                     <FormLabel>First Name</FormLabel>
                                                     <FormControl>
                                                         <Input
@@ -315,9 +315,7 @@ export function Onboarding({ className, ...props }: React.ComponentProps<'div'>)
                                                             placeholder='Enter your first name' { ...field }
                                                         />
                                                     </FormControl>
-                                                    <div className='min-h-[20px]'>
-                                                        <FormMessage />
-                                                    </div>
+                                                    <FormMessage />
                                                 </FormItem>
                                             ) }
                                         />
@@ -326,7 +324,7 @@ export function Onboarding({ className, ...props }: React.ComponentProps<'div'>)
                                             control={ form.control }
                                             name='lastName'
                                             render={ ({ field }) => (
-                                                <FormItem className='grid gap-3'>
+                                                <FormItem>
                                                     <FormLabel>Last Name</FormLabel>
                                                     <FormControl>
                                                         <Input
@@ -334,9 +332,7 @@ export function Onboarding({ className, ...props }: React.ComponentProps<'div'>)
                                                             placeholder='Enter your last name' { ...field }
                                                         />
                                                     </FormControl>
-                                                    <div className='min-h-[20px]'>
-                                                        <FormMessage />
-                                                    </div>
+                                                    <FormMessage />
                                                 </FormItem>
                                             ) }
                                         />

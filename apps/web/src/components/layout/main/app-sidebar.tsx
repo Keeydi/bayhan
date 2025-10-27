@@ -143,7 +143,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname();
     const { data, isPending } = useSession()
     const { user } = data || {}
-    const role = (user?.role || 'unassigned') as Role
+    // Normalize role to lowercase to match enum
+    const userRole = user?.role?.toLowerCase() || 'unassigned'
+    const role = userRole as Role
     const menu = getMenuForRole(role)
 
     if (isPending) {

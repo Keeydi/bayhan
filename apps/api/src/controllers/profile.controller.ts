@@ -2,7 +2,7 @@ import { RequestHandler } from 'express'
 import { prisma } from '@utils/database'
 import { Response } from '@utils/response'
 import { validateRequestBody, validateRequestQuery } from '@middlewares/request'
-import { CreateProfileSchema, PaginatedQuerySchema } from '@repo/schemas'
+import { CreateProfileSchema, PaginatedQuerySchema, UpdateProfileSchema } from '@repo/schemas'
 import { MediaType } from '@repo/database'
 import { z } from 'zod'
 import { s3Service } from '@lib/external'
@@ -108,6 +108,35 @@ export const getProfile: RequestHandler = async (req, res) => {
         }
     }))
 }
+
+export const updateProfile = validateRequestBody(UpdateProfileSchema, async (req, res) => {
+    const { user: { id }, parsedBody: data } = req
+
+    const user = await prisma.user.findFirst({
+        where: { id },
+        select: { profile: true }
+    })
+
+    if (!user?.profile) {
+        return res.respond(Response.notFound({ message: 'Profile not found' }))
+    }
+
+    // Update profile with provided data
+    const updatedProfile = await prisma.profile.update({
+        where: { userId: id },
+        data: data,
+        omit: {
+            userId: true,
+            createdAt: true,
+            updatedAt: true
+        }
+    })
+
+    res.respond(Response.success({
+        message: 'Profile updated successfully',
+        data: updatedProfile
+    }))
+})
 
 export const uploadCredentials: RequestHandler = async (req, res) => {
     const { user: { id } } = req

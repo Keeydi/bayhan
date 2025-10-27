@@ -83,7 +83,7 @@ export const generateMockIncidents = (count: number = 30, startIndex: number = 0
         'Bridge Damage', 'Tree Fall', 'Sewage Overflow', 'Chemical Spill'
     ]
 
-    const severities: IncidentSeverity[] = [ 'LOW', 'MODERATE', 'HIGH', 'CRITICAL' ]
+    const severities: IncidentSeverity[] = [ 'LOW', 'MED', 'HIGH', 'CRITICAL' ]
     const statuses: IncidentStatus[] = [ 'OPEN', 'RESOLVED' ]
 
     return Array.from({ length: count }, (_, i) => {

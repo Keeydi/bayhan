@@ -3,7 +3,8 @@
 
 export type Role = 'CDRRMO' | 'VOLUNTEER' | 'ADMIN' | 'UNASSIGNED'
 export type IncidentStatus = 'OPEN' | 'RESOLVED'
-export type IncidentSeverity = 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL'
+export type IncidentSeverity = 'LOW' | 'MED' | 'HIGH' | 'CRITICAL'
+export type IncidentType = 'FLOODING' | 'LAHAR_FLOW' | 'EARTHQUAKE' | 'OTHER'
 export type VolunteerRequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
 export type TrainingProgramStatus = 'UPCOMING' | 'ONGOING' | 'FINISHED' | 'CANCELLED'
 export type MediaType = 'ACCREDITATION' | 'CERTIFICATION' | 'INCIDENT' | 'TRAINING'
@@ -34,6 +35,7 @@ export interface Profile {
     lastName: string
     phone?: string
     birthDate?: Date
+    volunteerType?: VolunteerType
     createdAt: Date
     updatedAt: Date
 }
@@ -41,9 +43,10 @@ export interface Profile {
 export interface Address {
     id: string
     userId: string
-    street: string
+    street?: string
     city: string
     state: string
+    barangay?: string
     zipCode: string
     createdAt: Date
     updatedAt: Date
@@ -145,6 +148,7 @@ export interface Incident {
         longitude: number
         address?: string
     }
+    type?: IncidentType
     status: IncidentStatus
     severity: IncidentSeverity
     reportedBy: string

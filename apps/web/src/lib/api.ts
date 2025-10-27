@@ -15,6 +15,8 @@ export const createApiClient = (token?: string) => {
 
             if (!response) return Promise.reject(error)
 
+            // Return the response even if it has an error status code
+            // This allows callers to manually check response.status
             return response
         }
     )

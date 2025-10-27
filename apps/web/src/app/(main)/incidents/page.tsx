@@ -1,7 +1,6 @@
 import React from 'react'
-import { IncidentsTable } from '@components/tables'
+import { IncidentsTableWithFilter } from '@components/tables'
 import { PermissionGuard } from '@components/auth'
-import { IncidentModal } from '@components/modals'
 import { hasPermission } from '@actions/auth'
 import { forbidden } from 'next/navigation'
 import { Metadata } from 'next'
@@ -23,14 +22,10 @@ export default async function Page() {
                     <h1 className='text-2xl font-bold'>Incidents</h1>
                     <p className='text-muted-foreground'>Manage and track emergency incidents</p>
                 </div>
-
-                <PermissionGuard resource='incident' action='write'>
-                    <IncidentModal />
-                </PermissionGuard>
             </div>
 
             <PermissionGuard resource='incident' action='read'>
-                <IncidentsTable />
+                <IncidentsTableWithFilter />
             </PermissionGuard>
         </div>
     )

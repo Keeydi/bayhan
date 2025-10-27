@@ -23,16 +23,23 @@ interface LocationData {
 // Function to send location updates to the API
 const sendLocationUpdate = async ({ latitude, longitude }: LocationData, api: AxiosInstance) => {
     try {
+        // Axios automatically throws for non-2xx status codes, so no need to check manually
         const response = await api.post('/locations', { latitude, longitude })
-
-        if (response.status !== 200) {
-            throw new Error(`HTTP error! status: ${ response.status }`)
+        
+        // Log success (200-299 are all valid success codes)
+        console.log('Location update sent successfully:', response.data)
+    } catch (error: any) {
+        // Only log actual errors (network issues, 4xx, 5xx)
+        if (error.response) {
+            // Server responded with error status
+            console.error('Failed to send location update:', error.response.status, error.response.data)
+        } else if (error.request) {
+            // Request was made but no response received
+            console.error('No response received from server')
+        } else {
+            // Something else happened
+            console.error('Error setting up request:', error.message)
         }
-
-        const result = response.data
-        console.log('Location update sent successfully:', result)
-    } catch (error) {
-        console.error('Failed to send location update:', error)
     }
 }
 
